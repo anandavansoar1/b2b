@@ -49,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
     // Simulate API verification
     setTimeout(() => {
       setLoading(false);
-      navigation?.navigate && navigation.navigate('Dashboard');
+      navigation?.navigate && navigation.navigate('Main');
     }, 1200);
   };
 

@@ -35,8 +35,7 @@ const MyOrdersScreen = ({ navigation }) => {
       <Header
         title="My Orders"
         subtitle="Track your current orders"
-        showBack={true}
-        onBackPress={() => navigation.goBack()}
+        showBack={false}
       />
 
       <View style={{ width: contentWidth, alignSelf: 'center' }}>
@@ -175,7 +174,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 1,
   },
-  scrollContent: { paddingBottom: 40 },
+  scrollContent: { paddingBottom: 100 },
   orderCard: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },

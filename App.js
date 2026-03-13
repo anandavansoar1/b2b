@@ -4,16 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ThemeProvider } from './theme/ThemeContext';
 import LoginScreen from './screens/LoginScreen';
-import DashboardScreen from './screens/DashboardScreen';
-import CatalogueScreen from './screens/CatalogueScreen';
 import ProductDetailsScreen from './screens/ProductDetailsScreen';
-import MyOrdersScreen from './screens/MyOrdersScreen';
-import SettingsScreen from './screens/SettingsScreen';
 import CartScreen from './screens/CartScreen';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import * as Updates from 'expo-updates';
 
+import BottomTabs from './navigation/BottomTabs';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,14 +42,9 @@ export default function App() {
             initialRouteName="Login"
             screenOptions={{ headerShown: false }}
           >
-
-            
             <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Dashboard" component={DashboardScreen} />
-            <Stack.Screen name="Catalogue" component={CatalogueScreen} />
+            <Stack.Screen name="Main" component={BottomTabs} />
             <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
-            <Stack.Screen name="MyOrders" component={MyOrdersScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="Cart" component={CartScreen} />
           </Stack.Navigator>
         </NavigationContainer>

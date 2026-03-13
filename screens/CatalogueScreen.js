@@ -173,8 +173,7 @@ const CatalogueScreen = ({ navigation }) => {
       <Header 
         title="Catalogue" 
         subtitle={`${filteredProducts.length} products found`}
-        showBack={true}
-        onBackPress={() => navigation.goBack()}
+        showBack={false}
         rightElement={<CartButton />}
       />
 
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 16,
-    paddingBottom: 40,
+    paddingBottom: 100,
   },
   searchBar: {
     flexDirection: 'row',

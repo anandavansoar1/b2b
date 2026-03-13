@@ -98,8 +98,7 @@ const SettingsScreen = ({ navigation }) => {
       <Header
         title="Settings"
         subtitle="App preferences & account"
-        showBack={true}
-        onBackPress={() => navigation.goBack()}
+        showBack={false}
       />
 
       <ScrollView contentContainerStyle={[styles.scrollContent, { alignItems: 'center' }]} showsVerticalScrollIndicator={false}>
@@ -186,7 +185,7 @@ const SettingsScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  scrollContent: { paddingBottom: 40 },
+  scrollContent: { paddingBottom: 100 },
   sectionTitle: {
     fontWeight: '700',
     marginBottom: 8,
