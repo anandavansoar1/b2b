@@ -34,7 +34,7 @@ const DashboardScreen = ({ navigation }) => {
   const recentActivity = [
     { id: 1, title: 'Order Delivered', time: '2h ago', desc: 'Order #ORD-5481 has been delivered.', icon: 'checkmark-circle', color: COLORS.success },
     { id: 2, title: 'Stock Update', time: '5h ago', desc: 'Gold Bangle Set is back in stock.', icon: 'refresh-circle', color: COLORS.primary },
-    { id: 3, title: 'New Product', time: '1d ago', desc: 'Emerald Rings collection added.', icon: 'star-circle', color: COLORS.info || '#3498DB' },
+    { id: 3, title: 'New Product', time: '1d ago', desc: 'Emerald Rings collection added.', icon: 'sparkles', color: COLORS.info || '#3498DB' },
   ];
 
   return (
@@ -63,12 +63,12 @@ const DashboardScreen = ({ navigation }) => {
       <ScrollView 
         style={{ flex: 1 }} 
         showsVerticalScrollIndicator={false} 
-        contentContainerStyle={[styles.scrollContent, { alignItems: 'center', flexGrow: 1 }]}
+        contentContainerStyle={[styles.scrollContent, { flexGrow: 1 }]}
       >
-        <View style={{ width: contentWidth }}>
+        <View style={{ width: '100%', alignSelf: 'center' }}>
 
           {/* ── Stats Row ─────────────────────── */}
-          <View style={styles.statsRow}>
+          <View style={[styles.statsRow, { width: '100%' }]}>
             {stats.map((stat, idx) => (
               <StatCard
                 key={idx}
@@ -81,7 +81,7 @@ const DashboardScreen = ({ navigation }) => {
           </View>
 
           {/* ── Quick Actions ────────────────── */}
-          <Text style={[styles.sectionTitle, { color: theme.text, fontSize: fs(18) }]}>Quick Actions</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text, fontSize: fs(18), marginTop: pd(8) }]}>Quick Actions</Text>
 
           <View style={styles.menuGrid}>
             {menuItems.map((item) => (
@@ -112,7 +112,7 @@ const DashboardScreen = ({ navigation }) => {
                   styles.activityItem, 
                   { 
                     paddingVertical: pd(16), 
-                    paddingHorizontal: pd(16), 
+                    paddingHorizontal: pd(20), 
                     borderBottomWidth: index === recentActivity.length - 1 ? 0 : 1, 
                     borderBottomColor: isDarkMode ? '#3A3A3A' : '#F1F1F1' 
                   }
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingTop: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   themeBtn: {
     justifyContent: 'center',
@@ -165,8 +165,10 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
+    marginTop: 10,
     marginBottom: 24,
+    justifyContent: 'space-between',
   },
   sectionTitle: {
     fontWeight: '800',
