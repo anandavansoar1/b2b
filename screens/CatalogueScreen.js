@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Image,
   FlatList,
   StatusBar,
-  Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
 import { COLORS } from '../theme/colors';
@@ -19,28 +19,47 @@ import CartButton from '../components/CartButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../redux/slices/cartSlice';
+import { fetchCatalogue } from '../redux/slices/catalogueSlice';
+import { BASE_URL } from '../api/apiClient';
+import CatalogueSkeleton from '../components/CatalogueSkeleton';
 
-
-// ─── Sample product data ────────────────────────────────────────────────────
+// ─── Category chips ───────────────────────────────────────────────────────────
 const CATEGORIES = [
   { id: 'all', label: 'All' },
-  { id: 'gold', label: '🪙 Gold' },
-  { id: 'silver', label: '🥈 Silver' },
-  { id: 'diamond', label: '💎 Diamond' },
-  { id: 'platinum', label: '⬜ Platinum' },
-  { id: 'gemstone', label: '🔮 Gemstone' },
+  { id: 'stock', label: '📦 In Stock' },
+  { id: 'sold', label: '✅ Sold' },
 ];
 
-const PRODUCTS = [
-  { id: '1', name: 'Classic Gold Ring', sku: 'GR-0012', category: 'gold', price: '₹24,500', unit: 'per piece', weight: '5.2g', purity: '22K', inStock: true, image: require('../assets/gold_ring.png') },
-  { id: '2', name: 'Diamond Solitaire', sku: 'DS-0045', category: 'diamond', price: '₹1,85,000', unit: 'per piece', weight: '3.8g', purity: 'VS1', inStock: true, image: require('../assets/diamond_solitaire.png') },
-  { id: '3', name: 'Silver Bracelet', sku: 'SB-0078', category: 'silver', price: '₹3,200', unit: 'per piece', weight: '18g', purity: '92.5%', inStock: false, image: require('../assets/silver_bracelet.png') },
-  { id: '4', name: 'Gold Bangle Set', sku: 'GB-0031', category: 'gold', price: '₹62,000', unit: 'per set', weight: '22g', purity: '18K', inStock: true, image: require('../assets/gold_bangles.png') },
-  { id: '5', name: 'Platinum Chain', sku: 'PC-0019', category: 'platinum', price: '₹45,000', unit: 'per piece', weight: '8g', purity: '95%', inStock: true, image: require('../assets/platinum_chain.png') },
-  { id: '6', name: 'Ruby Pendant', sku: 'RP-0056', category: 'gemstone', price: '₹28,000', unit: 'per piece', weight: '4.1g', purity: 'AAA', inStock: true, image: require('../assets/ruby_pendant.png') },
-  { id: '7', name: 'Gold Earrings', sku: 'GE-0024', category: 'gold', price: '₹18,000', unit: 'per pair', weight: '4.8g', purity: '22K', inStock: false, image: require('../assets/gold_earrings.png') },
-  { id: '8', name: 'Emerald Ring', sku: 'ER-0067', category: 'gemstone', price: '₹52,000', unit: 'per piece', weight: '5.5g', purity: 'AAA', inStock: true, image: require('../assets/emerald_ring.png') },
-];
+// ─── Normalise API response fields to the card's expected shape ───────────────
+const normalise = (item) => {
+  // Construct image URL using the backend's streaming endpoint
+  const getImageUrl = () => {
+    if (item.img && item.img.length > 0) {
+      return `${BASE_URL}/img?path=${encodeURIComponent(item.img[0])}`;
+    }
+    return item.image_url ?? item.imageUrl ?? null;
+  };
+
+  return {
+    id: String(item.id ?? item._id ?? item.item_code ?? Math.random()),
+    name: item.item_name ?? item.remarks ?? item.item_code ?? 'Unnamed Product',
+    sku: item.item_code ?? item.sku ?? '—',
+    category: (item.status ?? item.category ?? item.item_type ?? '').toLowerCase(),
+    price:
+      item.sale_amount != null
+        ? `₹${Number(item.sale_amount).toLocaleString('en-IN')}`
+        : item.price ?? '—',
+    unit: item.unit ?? item.uom ?? 'per piece',
+    weight: item.net_wt
+      ? `${item.net_wt}g`
+      : item.weight
+      ? `${item.weight}g`
+      : '—',
+    purity: item.purity ?? item.quality ?? '—',
+    inStock: item.status === 'stock' || item.in_stock === true || true,
+    imageUrl: getImageUrl(),
+  };
+};
 
 const CatalogueScreen = ({ navigation }) => {
   const { theme, isDarkMode } = useTheme();
@@ -50,119 +69,168 @@ const CatalogueScreen = ({ navigation }) => {
   const [activeInput, setActiveInput] = useState(null);
 
   const dispatch = useDispatch();
-  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const cartItems = useSelector((state) => state.cart.items);
+  const { products, loading, error } = useSelector((state) => state.catalogue);
 
-  const filteredProducts = PRODUCTS.filter((p) => {
-    const matchCategory = selectedCategory === 'all' || p.category === selectedCategory;
-    const matchSearch = p.name.toLowerCase().includes(searchText.toLowerCase()) ||
+  // ── Fetch catalogue from API on mount ───────────────────────────────────────
+  useEffect(() => {
+    dispatch(fetchCatalogue());
+  }, [dispatch]);
+
+  const normalisedProducts = products.map(normalise);
+
+  const filteredProducts = normalisedProducts.filter((p) => {
+    const matchCategory =
+      selectedCategory === 'all' || p.category.includes(selectedCategory);
+    const matchSearch =
+      p.name.toLowerCase().includes(searchText.toLowerCase()) ||
       p.sku.toLowerCase().includes(searchText.toLowerCase());
     return matchCategory && matchSearch;
   });
 
+  // ── Product card renderer ────────────────────────────────────────────────────
   const renderProduct = ({ item, index }) => {
     if (item.empty) {
-      return <View style={{ flex: 1, marginLeft: pd(10), backgroundColor: 'transparent' }} />;
-    }
-    
-    const cartItem = cartItems.find((cItem) => cItem.id === item.id);
-    const quantityInCart = cartItem ? cartItem.quantity : 0;
-    
-    return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('ProductDetails', { product: item })}
-      activeOpacity={0.85}
-      style={[
-        styles.productCard,
-        {
-          backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF',
-          borderRadius: rd(20),
-          marginLeft: index % 2 === 0 ? 0 : pd(10),
-        },
-      ]}
-    >
-      {/* Product Image */}
-      <View style={[styles.productImage, {
-        backgroundColor: isDarkMode ? '#3A3A3A' : '#F8F4EA',
-        borderRadius: rd(14),
-        overflow: 'hidden',
-      }]}>
-        <Image
-          source={item.image}
-          style={{ width: '100%', height: '100%' }}
-          resizeMode="cover"
+      return (
+        <View
+          style={{ flex: 1, marginLeft: pd(10), backgroundColor: 'transparent' }}
         />
-        {!item.inStock && (
-          <View style={[styles.outOfStockBadge, { borderRadius: rd(8) }]}>
-            <Text style={{ color: '#FFF', fontSize: fs(9), fontWeight: '700' }}>OUT OF STOCK</Text>
-          </View>
-        )}
-      </View>
+      );
+    }
 
-      <View style={{ padding: pd(12), paddingTop: pd(10) }}>
-        <Text style={[styles.productName, { color: theme.text, fontSize: fs(13) }]} numberOfLines={2}>
-          {item.name}
-        </Text>
-        <Text style={{ color: theme.textSecondary, fontSize: fs(11), marginTop: 2 }}>
-          {item.sku}
-        </Text>
+    const cartItem = cartItems.find((c) => c.id === item.id);
+    const quantityInCart = cartItem ? cartItem.quantity : 0;
 
-        <View style={[styles.productMeta, { marginTop: pd(8) }]}>
-          <Text style={[styles.purity, { fontSize: fs(11), borderRadius: rd(6) }]}>
-            {item.purity}
-          </Text>
-          <Text style={{ color: theme.textSecondary, fontSize: fs(11) }}>
-            {item.weight}
-          </Text>
+    return (
+      <TouchableOpacity
+        onPress={() => navigation.navigate('ProductDetails', { product: item })}
+        activeOpacity={0.85}
+        style={[
+          styles.productCard,
+          {
+            backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF',
+            borderRadius: rd(20),
+            marginLeft: index % 2 === 0 ? 0 : pd(10),
+          },
+        ]}
+      >
+        {/* Image */}
+        <View
+          style={[
+            styles.productImage,
+            {
+              backgroundColor: isDarkMode ? '#3A3A3A' : '#F8F4EA',
+              borderRadius: rd(14),
+              overflow: 'hidden',
+            },
+          ]}
+        >
+          {item.imageUrl ? (
+            <Image
+              source={{ uri: item.imageUrl }}
+              style={{ width: '100%', height: '100%' }}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Ionicons name="diamond-outline" size={fs(36)} color={COLORS.primary} />
+            </View>
+          )}
+          {!item.inStock && (
+            <View style={[styles.outOfStockBadge, { borderRadius: rd(8) }]}>
+              <Text style={{ color: '#FFF', fontSize: fs(9), fontWeight: '700' }}>
+                OUT OF STOCK
+              </Text>
+            </View>
+          )}
         </View>
 
-        <View style={[styles.priceRow, { marginTop: pd(8) }]}>
-          <Text style={[styles.price, { color: COLORS.primary, fontSize: fs(15) }]}>
-            {item.price}
-          </Text>
-          <Text style={{ color: theme.textSecondary, fontSize: fs(10) }}>
-            {item.unit}
-          </Text>
-        </View>
-
-        {quantityInCart > 0 ? (
-          <View style={[styles.qtyControlContainer, { marginTop: pd(10), height: pd(34), backgroundColor: isDarkMode ? '#3A3A3A' : '#F0F0F0', borderRadius: rd(10) }]}>
-            <TouchableOpacity onPress={() => dispatch(removeFromCart(item.id))} style={styles.qtyControlBtn} activeOpacity={0.7}>
-              <Ionicons name="remove" size={fs(16)} color={theme.text} />
-            </TouchableOpacity>
-            
-            <Text style={{ color: theme.text, fontSize: fs(14), fontWeight: '700' }}>
-              {quantityInCart}
-            </Text>
-
-            <TouchableOpacity onPress={() => dispatch(addToCart(item))} style={styles.qtyControlBtn} activeOpacity={0.7}>
-              <Ionicons name="add" size={fs(16)} color={theme.text} />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={[styles.addBtn, {
-              backgroundColor: item.inStock ? COLORS.primary : '#ccc',
-              borderRadius: rd(10),
-              marginTop: pd(10),
-              height: pd(34),
-            }]}
-            disabled={!item.inStock}
-            activeOpacity={0.8}
-            onPress={() => {
-              dispatch(addToCart(item));
-            }}
+        {/* Details */}
+        <View style={{ padding: pd(12), paddingTop: pd(10) }}>
+          <Text
+            style={[styles.productName, { color: theme.text, fontSize: fs(13) }]}
+            numberOfLines={2}
           >
-            <Text style={{ color: '#fff', fontSize: fs(12), fontWeight: '700' }}>
-              {item.inStock ? '+ Add to Order' : 'Unavailable'}
+            {item.name}
+          </Text>
+          <Text style={{ color: theme.textSecondary, fontSize: fs(11), marginTop: 2 }}>
+            {item.sku}
+          </Text>
+
+          <View style={[styles.productMeta, { marginTop: pd(8) }]}>
+            <Text style={[styles.purity, { fontSize: fs(11), borderRadius: rd(6) }]}>
+              {item.purity}
             </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </TouchableOpacity>
+            <Text style={{ color: theme.textSecondary, fontSize: fs(11) }}>
+              {item.weight}
+            </Text>
+          </View>
+
+          <View style={[styles.priceRow, { marginTop: pd(8) }]}>
+            <Text style={[styles.price, { color: COLORS.primary, fontSize: fs(15) }]}>
+              {item.price}
+            </Text>
+            <Text style={{ color: theme.textSecondary, fontSize: fs(10) }}>
+              {item.unit}
+            </Text>
+          </View>
+
+          {quantityInCart > 0 ? (
+            <View
+              style={[
+                styles.qtyControlContainer,
+                {
+                  marginTop: pd(10),
+                  height: pd(34),
+                  backgroundColor: isDarkMode ? '#3A3A3A' : '#F0F0F0',
+                  borderRadius: rd(10),
+                },
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() => dispatch(removeFromCart(item.id))}
+                style={styles.qtyControlBtn}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="remove" size={fs(16)} color={theme.text} />
+              </TouchableOpacity>
+              <Text style={{ color: theme.text, fontSize: fs(14), fontWeight: '700' }}>
+                {quantityInCart}
+              </Text>
+              <TouchableOpacity
+                onPress={() => dispatch(addToCart(item))}
+                style={styles.qtyControlBtn}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="add" size={fs(16)} color={theme.text} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={[
+                styles.addBtn,
+                {
+                  backgroundColor: item.inStock ? COLORS.primary : '#ccc',
+                  borderRadius: rd(10),
+                  marginTop: pd(10),
+                  height: pd(34),
+                },
+              ]}
+              disabled={!item.inStock}
+              activeOpacity={0.8}
+              onPress={() => dispatch(addToCart(item))}
+            >
+              <Text style={{ color: '#fff', fontSize: fs(12), fontWeight: '700' }}>
+                {item.inStock ? '+ Add to Order' : 'Unavailable'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableOpacity>
     );
   };
 
+  // ── Render ────────────────────────────────────────────────────────────────────
   return (
     <View style={[styles.root, { backgroundColor: theme.background }]}>
       <StatusBar
@@ -170,9 +238,9 @@ const CatalogueScreen = ({ navigation }) => {
         backgroundColor={isDarkMode ? '#1E1E1E' : COLORS.backgroundLight}
       />
 
-      <Header 
-        title="Catalogue" 
-        subtitle={`${filteredProducts.length} products found`}
+      <Header
+        title="Catalogue"
+        subtitle={loading ? 'Loading…' : `${filteredProducts.length} products found`}
         showBack={false}
         rightElement={<CartButton />}
       />
@@ -185,17 +253,24 @@ const CatalogueScreen = ({ navigation }) => {
         <View style={{ width: contentWidth }}>
 
           {/* ── Search Bar ── */}
-          <View style={[styles.searchBar, {
-            backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF',
-            borderRadius: rd(16),
-            borderColor: activeInput === 'search' ? COLORS.primary : 'transparent',
-            borderWidth: activeInput === 'search' ? 1.5 : 1,
-            marginTop: pd(18),
-            marginBottom: pd(6),
-            height: pd(50),
-            paddingHorizontal: pd(16),
-          }]}>
-            <Text style={{ fontSize: fs(18), marginRight: pd(10), color: COLORS.primary }}>🔍</Text>
+          <View
+            style={[
+              styles.searchBar,
+              {
+                backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF',
+                borderRadius: rd(16),
+                borderColor: activeInput === 'search' ? COLORS.primary : 'transparent',
+                borderWidth: activeInput === 'search' ? 1.5 : 1,
+                marginTop: pd(18),
+                marginBottom: pd(6),
+                height: pd(50),
+                paddingHorizontal: pd(16),
+              },
+            ]}
+          >
+            <Text style={{ fontSize: fs(18), marginRight: pd(10), color: COLORS.primary }}>
+              🔍
+            </Text>
             <TextInput
               style={[styles.searchInput, { color: theme.text, fontSize: fs(14) }]}
               placeholder="Search product or SKU..."
@@ -212,7 +287,7 @@ const CatalogueScreen = ({ navigation }) => {
             )}
           </View>
 
-          {/* ── Category Filter Chips ── */}
+          {/* ── Category Chips ── */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -225,7 +300,12 @@ const CatalogueScreen = ({ navigation }) => {
                 style={[
                   styles.chip,
                   {
-                    backgroundColor: selectedCategory === cat.id ? COLORS.primary : (isDarkMode ? '#2C2C2C' : '#FFFFFF'),
+                    backgroundColor:
+                      selectedCategory === cat.id
+                        ? COLORS.primary
+                        : isDarkMode
+                        ? '#2C2C2C'
+                        : '#FFFFFF',
                     borderRadius: rd(22),
                     paddingHorizontal: pd(16),
                     height: pd(38),
@@ -233,35 +313,88 @@ const CatalogueScreen = ({ navigation }) => {
                 ]}
                 activeOpacity={0.8}
               >
-                <Text style={{
-                  color: selectedCategory === cat.id ? '#FFF' : theme.text,
-                  fontSize: fs(13),
-                  fontWeight: selectedCategory === cat.id ? '700' : '500',
-                }}>
+                <Text
+                  style={{
+                    color: selectedCategory === cat.id ? '#FFF' : theme.text,
+                    fontSize: fs(13),
+                    fontWeight: selectedCategory === cat.id ? '700' : '500',
+                  }}
+                >
                   {cat.label}
                 </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
 
-          {/* ── Product Grid ── */}
-          {filteredProducts.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Text style={{ fontSize: fs(40) }}>🔍</Text>
-              <Text style={{ color: theme.textSecondary, fontSize: fs(15), marginTop: pd(12), textAlign: 'center' }}>
-                No products found{'\n'}Try a different search or category
+          {/* ── Loading ── */}
+          {loading && <CatalogueSkeleton />}
+
+          {/* ── Error ── */}
+          {!loading && error && (
+            <View style={styles.centeredState}>
+              <Ionicons
+                name="cloud-offline-outline"
+                size={fs(48)}
+                color={theme.textSecondary}
+              />
+              <Text
+                style={{
+                  color: theme.textSecondary,
+                  fontSize: fs(15),
+                  marginTop: pd(12),
+                  textAlign: 'center',
+                }}
+              >
+                {typeof error === 'string'
+                  ? error
+                  : error?.message ?? 'Failed to load catalogue'}
               </Text>
+              <TouchableOpacity
+                onPress={() => dispatch(fetchCatalogue())}
+                style={[
+                  styles.retryBtn,
+                  { backgroundColor: COLORS.primary, borderRadius: rd(12), marginTop: pd(16) },
+                ]}
+                activeOpacity={0.8}
+              >
+                <Text style={{ color: '#FFF', fontWeight: '700', fontSize: fs(14) }}>
+                  Retry
+                </Text>
+              </TouchableOpacity>
             </View>
-          ) : (
-            <FlatList
-              data={filteredProducts.length % 2 === 1 ? [...filteredProducts, { id: 'dummy-empty', empty: true }] : filteredProducts}
-              renderItem={renderProduct}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-              scrollEnabled={false}
-              columnWrapperStyle={{ marginBottom: pd(14) }}
-              contentContainerStyle={{ paddingBottom: pd(20) }}
-            />
+          )}
+
+          {/* ── Product Grid ── */}
+          {!loading && !error && (
+            filteredProducts.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Text style={{ fontSize: fs(40) }}>🔍</Text>
+                <Text
+                  style={{
+                    color: theme.textSecondary,
+                    fontSize: fs(15),
+                    marginTop: pd(12),
+                    textAlign: 'center',
+                  }}
+                >
+                  No products found{'\n'}Try a different search or category
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={
+                  filteredProducts.length % 2 === 1
+                    ? [...filteredProducts, { id: 'dummy-empty', empty: true }]
+                    : filteredProducts
+                }
+                renderItem={renderProduct}
+                keyExtractor={(item) => item.id}
+                numColumns={2}
+                scrollEnabled={false}
+                columnWrapperStyle={{ marginBottom: pd(14) }}
+                contentContainerStyle={{ paddingBottom: pd(20) }}
+              />
+            )
           )}
 
         </View>
@@ -271,9 +404,7 @@ const CatalogueScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
+  root: { flex: 1 },
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 100,
@@ -345,9 +476,7 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     gap: 4,
   },
-  price: {
-    fontWeight: '800',
-  },
+  price: { fontWeight: '800' },
   addBtn: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -365,12 +494,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  centeredState: {
+    alignItems: 'center',
+    paddingTop: 60,
+    paddingBottom: 40,
+  },
   emptyState: {
     alignItems: 'center',
     paddingTop: 60,
     paddingBottom: 40,
   },
+  retryBtn: {
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+  },
 });
 
 export default CatalogueScreen;
- //testing

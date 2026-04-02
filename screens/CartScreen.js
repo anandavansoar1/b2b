@@ -49,9 +49,13 @@ const CartScreen = ({ navigation }) => {
   };
 
   const renderCartItem = ({ item }) => (
-    <View style={[styles.cartItem, { backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF', borderRadius: rd(18) }]}> 
-      <View style={[styles.imageContainer, { backgroundColor: isDarkMode ? '#3A3A3A' : '#F8F4EA', borderRadius: rd(12) }]}> 
-        <Image source={item.image} style={styles.itemImage} resizeMode="cover" />
+    <View style={[styles.cartItem, { backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF', borderRadius: rd(18) }]}>
+      <View style={[styles.imageContainer, { backgroundColor: isDarkMode ? '#3A3A3A' : '#F8F4EA', borderRadius: rd(12) }]}>
+        {item.imageUrl ? (
+          <Image source={{ uri: item.imageUrl }} style={styles.itemImage} resizeMode="cover" />
+        ) : (
+          <Ionicons name="diamond-outline" size={fs(24)} color={COLORS.primary} />
+        )}
       </View>
 
       <View style={styles.itemDetails}>
@@ -63,7 +67,7 @@ const CartScreen = ({ navigation }) => {
         </View>
 
         <Text style={[styles.itemSku, { color: theme.textSecondary, fontSize: fs(12) }]}>SKU: {item.sku}</Text>
-        
+
         <View style={styles.itemFooter}>
           <Text style={[styles.itemPrice, { color: COLORS.primary, fontSize: fs(16) }]}>{item.price}</Text>
 
@@ -71,7 +75,7 @@ const CartScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() => handleDecrement(item.id)} style={[styles.qtyBtn, { width: pd(32), height: pd(32) }]} activeOpacity={0.7}>
               <Ionicons name="remove" size={fs(16)} color={theme.text} />
             </TouchableOpacity>
-            
+
             <Text style={[styles.qtyText, { color: theme.text, fontSize: fs(14), minWidth: pd(24) }]}>{item.quantity}</Text>
 
             <TouchableOpacity onPress={() => handleIncrement(item)} style={[styles.qtyBtn, { width: pd(32), height: pd(32) }]} activeOpacity={0.7}>
@@ -86,7 +90,7 @@ const CartScreen = ({ navigation }) => {
   return (
     <View style={[styles.root, { backgroundColor: theme.background }]}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
-      
+
       <Header
         title="My Cart"
         showBack={true}
@@ -109,7 +113,7 @@ const CartScreen = ({ navigation }) => {
           <Text style={[styles.emptySubtitle, { color: theme.textSecondary, fontSize: fs(15), marginTop: pd(12) }]}>
             Looks like you haven't added anything to your cart yet.
           </Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.startShoppingBtn, { backgroundColor: COLORS.primary, borderRadius: rd(14), marginTop: pd(32), paddingVertical: pd(16), paddingHorizontal: pd(32) }]}
             activeOpacity={0.8}
             onPress={() => navigation.navigate('Catalogue')}
@@ -127,7 +131,7 @@ const CartScreen = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
           />
 
-          <View style={[styles.checkoutContainer, { 
+          <View style={[styles.checkoutContainer, {
             backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
             borderTopColor: isDarkMode ? '#333' : '#F0F0F0',
             paddingHorizontal: pd(24),
@@ -139,7 +143,7 @@ const CartScreen = ({ navigation }) => {
               <Text style={{ color: theme.text, fontSize: fs(24), fontWeight: '800' }}>{calculateTotal()}</Text>
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.checkoutBtn, { backgroundColor: COLORS.primary, borderRadius: rd(16), marginTop: pd(16), paddingVertical: pd(18) }]}
               activeOpacity={0.85}
               onPress={() => {

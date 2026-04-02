@@ -18,6 +18,8 @@ import Button from '../components/Button';
 import { useResponsive } from '../utils/responsive';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, verify } from '../redux/slices/authSlice';
 
 const { width, height } = Dimensions.get('window');
 
@@ -146,21 +148,28 @@ const LoginScreen = ({ navigation }) => {
       flexDirection: 'row',
       alignItems: 'center',
       height: pd(54),
+      borderWidth: 1.5,
+      borderRadius: rd(14),
+      overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.05,
+      shadowRadius: 4,
+      elevation: 1,
     },
     phonePrefix: {
-      height: pd(54),
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: pd(14),
-      borderWidth: 1.5,
-      borderRightWidth: 0,
-      borderTopLeftRadius: rd(14),
-      borderBottomLeftRadius: rd(14),
+      paddingHorizontal: pd(16),
+      borderRightWidth: 1,
     },
     phoneInput: {
       flex: 1,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
+      height: '100%',
+      paddingHorizontal: pd(16),
+      fontSize: fs(16),
+      fontWeight: '600',
       letterSpacing: 1.5,
     },
     otpContainer: {
@@ -303,11 +312,13 @@ const LoginScreen = ({ navigation }) => {
     },
   }), [fs, pd, rd, isDarkMode, theme]);
 
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
+
   const [phoneNumber, setPhoneNumber] = useState('');
   const [companyCode, setCompanyCode] = useState('');
   const [otp, setOtp] = useState(['', '', '', '']);
   const [step, setStep] = useState(1); // 1 = Phone, 2 = OTP
-  const [loading, setLoading] = useState(false);
   const [activeInput, setActiveInput] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
@@ -336,7 +347,7 @@ const LoginScreen = ({ navigation }) => {
     }, 500);
   };
 
-  const handleSendCode = () => {
+  const handleSendCode = async () => {
     if (!companyCode.trim()) {
       Alert.alert('Required', 'Please enter or scan your Company Code');
       return;
@@ -345,24 +356,33 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Invalid Phone', 'Please enter a valid 10-digit phone number');
       return;
     }
-    setLoading(true);
-    // Simulate API call to send OTP
-    setTimeout(() => {
-      setLoading(false);
-      setStep(2);
-    }, 1000);
+
+    try {
+      const resultAction = await dispatch(login({ companyCode, phoneNumber }));
+      if (login.fulfilled.match(resultAction)) {
+        setStep(2);
+      } else if (login.rejected.match(resultAction)) {
+        Alert.alert('Login Error', resultAction.payload?.message || 'Failed to send OTP code.');
+      }
+    } catch (err) {
+      Alert.alert('Network Error', 'Something went wrong. Please try again.');
+    }
   };
 
-  const handleVerifyOTP = () => {
+  const handleVerifyOTP = async () => {
     const enteredOtp = otp.join('');
     if (enteredOtp.length < 4) return;
 
-    setLoading(true);
-    // Simulate API verification
-    setTimeout(() => {
-      setLoading(false);
-      navigation?.navigate && navigation.navigate('Main');
-    }, 1200);
+    try {
+      const resultAction = await dispatch(verify({ companyCode,phoneNumber, otp: enteredOtp }));
+      if (verify.fulfilled.match(resultAction)) {
+        navigation?.navigate && navigation.navigate('Main');
+      } else if (verify.rejected.match(resultAction)) {
+        Alert.alert('Verification Failed', resultAction.payload?.message || 'Invalid OTP code.');
+      }
+    } catch (err) {
+      Alert.alert('Network Error', 'Something went wrong. Please try again.');
+    }
   };
 
   const handleOtpChange = (value, index) => {
@@ -470,31 +490,30 @@ const LoginScreen = ({ navigation }) => {
 
                   <View style={[styles.inputContainer, { marginBottom: pd(18) }]}>
                     <Text style={[styles.label, { color: theme.text, fontSize: fs(13) }]}>Mobile Number</Text>
-                    <View style={[styles.phoneInputWrapper, { height: pd(54) }]}>
+                    <View style={[
+                      styles.phoneInputWrapper,
+                      {
+                        backgroundColor: theme.inputBackground,
+                        borderColor: activeInput === 'phone' ? COLORS.primary : theme.border,
+                        borderWidth: activeInput === 'phone' ? 2 : 1,
+                      }
+                    ]}>
                       <View style={[
                         styles.phonePrefix,
                         {
                           backgroundColor: isDarkMode ? '#3A3A3A' : '#F5F0E4',
-                          borderColor: activeInput === 'phone' ? COLORS.primary : theme.border,
-                          borderWidth: activeInput === 'phone' ? 2 : 1,
-                          borderRightWidth: 0,
-                          height: pd(54)
+                          borderRightColor: activeInput === 'phone' ? COLORS.primary : theme.border,
                         }
                       ]}>
-                        <Text style={{ color: theme.text, fontWeight: '600', fontSize: fs(15) }}>+91</Text>
+                        <Text style={{ color: theme.text, fontWeight: '700', fontSize: fs(15) }}>+91</Text>
                       </View>
                       <TextInput
                         ref={phoneInputRef}
                         style={[
-                          styles.modernInput,
                           styles.phoneInput,
                           {
-                            backgroundColor: theme.inputBackground,
                             color: theme.text,
-                            borderColor: activeInput === 'phone' ? COLORS.primary : theme.border,
-                            borderWidth: activeInput === 'phone' ? 2 : 1,
-                            height: pd(54),
-                            fontSize: fs(16),
+                            backgroundColor: 'transparent',
                           },
                         ]}
                         placeholder="98765 43210"

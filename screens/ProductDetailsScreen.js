@@ -34,11 +34,8 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Use product.images if provided via API later, otherwise fallback
-  // to repeating the single image twice just to show off the multiple-image layout capability!
-  const images = product.images && product.images.length > 0
-    ? product.images
-    : [product.image, product.image];
+  // Use product.imageUrl provided by normalisation in CatalogueScreen
+  const images = product.imageUrl ? [{ uri: product.imageUrl }] : [null];
 
   const handleAddToCart = () => {
     dispatch(addToCart(product));
@@ -60,11 +57,18 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
   const renderImage = ({ item }) => (
     <View style={[styles.imageWrapper, { width, height: hp(45), backgroundColor: isDarkMode ? '#212121' : '#F8F4EA' }]}>
-      <Image
-        source={item}
-        style={styles.productImage}
-        resizeMode="contain"
-      />
+      {item ? (
+        <Image
+          source={item}
+          style={styles.productImage}
+          resizeMode="contain"
+        />
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Ionicons name="diamond-outline" size={fs(80)} color={COLORS.primary} />
+          <Text style={{ color: theme.textSecondary, marginTop: pd(10), fontSize: fs(14) }}>No Image Available</Text>
+        </View>
+      )}
     </View>
   );
 
