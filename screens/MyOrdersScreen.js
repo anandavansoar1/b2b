@@ -127,11 +127,11 @@ const MyOrdersScreen = ({ navigation }) => {
                 </View>
 
                 <View style={{ flexDirection: 'row', marginTop: pd(16), gap: pd(10) }}>
-                  <TouchableOpacity style={[styles.actionBtn, { flex: 1, backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF', borderColor: isDarkMode ? '#3A3A3A' : '#E5E7EB', borderWidth: 1, borderRadius: rd(10), paddingVertical: pd(10) }]}>
+                  <TouchableOpacity onPress={() => navigation.navigate('UnderConstruction')} style={[styles.actionBtn, { flex: 1, backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF', borderColor: isDarkMode ? '#3A3A3A' : '#E5E7EB', borderWidth: 1, borderRadius: rd(10), paddingVertical: pd(10) }]}>
                     <Text style={{ textAlign: 'center', fontSize: fs(13), fontWeight: '600', color: theme.text }}>View Details</Text>
                   </TouchableOpacity>
                   {order.status === 'Delivered' && (
-                    <TouchableOpacity style={[styles.actionBtn, { flex: 1, backgroundColor: COLORS.primary, borderRadius: rd(10), paddingVertical: pd(10) }]}>
+                    <TouchableOpacity onPress={() => navigation.navigate('UnderConstruction')} style={[styles.actionBtn, { flex: 1, backgroundColor: COLORS.primary, borderRadius: rd(10), paddingVertical: pd(10) }]}>
                       <Text style={{ textAlign: 'center', fontSize: fs(13), fontWeight: '600', color: '#FFFFFF' }}>Reorder</Text>
                     </TouchableOpacity>
                   )}

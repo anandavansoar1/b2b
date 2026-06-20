@@ -12,6 +12,8 @@ import * as Updates from 'expo-updates';
 
 import BottomTabs from './navigation/BottomTabs';
 
+import UnderConstructionScreen from './screens/UnderConstructionScreen';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -46,6 +48,7 @@ export default function App() {
             <Stack.Screen name="Main" component={BottomTabs} />
             <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
             <Stack.Screen name="Cart" component={CartScreen} />
+            <Stack.Screen name="UnderConstruction" component={UnderConstructionScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </ThemeProvider>

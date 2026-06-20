@@ -152,16 +152,16 @@ const SettingsScreen = ({ navigation }) => {
 
           <SectionTitle title="Account" />
           <SettingGroup>
-            <SettingRow icon="person-outline" label="Edit Profile" onPress={() => {}} />
-            <SettingRow icon="location-outline" label="Delivery Addresses" onPress={() => {}} />
-            <SettingRow icon="card-outline" label="Payment Methods" onPress={() => {}} />
+            <SettingRow icon="person-outline" label="Edit Profile" onPress={() => navigation.navigate('UnderConstruction')} />
+            <SettingRow icon="location-outline" label="Delivery Addresses" onPress={() => navigation.navigate('UnderConstruction')} />
+            <SettingRow icon="card-outline" label="Payment Methods" onPress={() => navigation.navigate('UnderConstruction')} />
           </SettingGroup>
 
           <SectionTitle title="Support" />
           <SettingGroup>
-            <SettingRow icon="chatbubble-ellipses-outline" label="Help & Support" onPress={() => {}} color={COLORS.textSecondary} />
-            <SettingRow icon="document-text-outline" label="Terms & Conditions" onPress={() => {}} color={COLORS.textSecondary} />
-            <SettingRow icon="shield-checkmark-outline" label="Privacy Policy" onPress={() => {}} color={COLORS.textSecondary} />
+            <SettingRow icon="chatbubble-ellipses-outline" label="Help & Support" onPress={() => navigation.navigate('UnderConstruction')} color={COLORS.textSecondary} />
+            <SettingRow icon="document-text-outline" label="Terms & Conditions" onPress={() => navigation.navigate('UnderConstruction')} color={COLORS.textSecondary} />
+            <SettingRow icon="shield-checkmark-outline" label="Privacy Policy" onPress={() => navigation.navigate('UnderConstruction')} color={COLORS.textSecondary} />
           </SettingGroup>
 
           <SettingGroup>

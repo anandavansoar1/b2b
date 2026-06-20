@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, verify } from '../redux/slices/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -315,8 +316,8 @@ const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
 
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [companyCode, setCompanyCode] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState(Math.floor(1000000000 + Math.random() * 9000000000).toString());
+  const [companyCode, setCompanyCode] = useState(Math.floor(10000 + Math.random() * 90000).toString());
   const [otp, setOtp] = useState(['', '', '', '']);
   const [step, setStep] = useState(1); // 1 = Phone, 2 = OTP
   const [activeInput, setActiveInput] = useState(null);
@@ -326,6 +327,21 @@ const LoginScreen = ({ navigation }) => {
   const otpInputs = Array(4).fill(0);
   const otpRefs = useRef([]);
   const phoneInputRef = useRef(null);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        if (token) {
+          // If token exists, auto-login
+          navigation?.replace ? navigation.replace('Main') : navigation.navigate('Main');
+        }
+      } catch (e) {
+        console.log('Error checking token', e);
+      }
+    };
+    checkLoginStatus();
+  }, []);
 
   const handleScanPress = async () => {
     if (!permission?.granted) {

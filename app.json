@@ -4,27 +4,31 @@
     "slug": "b2b",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/home.png",
+    "icon": "./assets/b2b.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/home.png",
+      "image": "./assets/b2b.png",
       "resizeMode": "contain",
       "backgroundColor": "#F5F0E4"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.goldshopper.b2b",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#F5F0E4",
-        "foregroundImage": "./assets/home.png",
-        "backgroundImage": "./assets/home.png",
-        "monochromeImage": "./assets/home.png"
+        "foregroundImage": "./assets/b2b.png",
+        "backgroundImage": "./assets/b2b.png",
+        "monochromeImage": "./assets/b2b.png"
       },
-      "package": "com.avansoar1.b2b"
+      "package": "com.goldshopper.b2b"
     },
     "web": {
-      "favicon": "./assets/home.png"
+      "favicon": "./assets/b2b.png"
     },
     "extra": {
       "eas": {

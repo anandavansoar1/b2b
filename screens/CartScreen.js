@@ -147,8 +147,10 @@ const CartScreen = ({ navigation }) => {
               style={[styles.checkoutBtn, { backgroundColor: COLORS.primary, borderRadius: rd(16), marginTop: pd(16), paddingVertical: pd(18) }]}
               activeOpacity={0.85}
               onPress={() => {
-                alert('Proceeding to checkout!');
-                // Implement checkout navigation logic
+                // Mock genuine checkout flow
+                dispatch(clearCart());
+                alert('Order Placed Successfully! We will notify you once it ships.');
+                navigation.navigate('Dashboard');
               }}
             >
               <Text style={{ color: '#FFF', fontSize: fs(17), fontWeight: '700' }}>Checkout Now</Text>
