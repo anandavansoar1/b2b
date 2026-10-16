@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useTheme } from '../theme/ThemeContext';
 import { useResponsive } from '../utils/responsive';
 
@@ -13,8 +13,10 @@ const Card = ({ title, subtitle, icon, onPress, style }) => {
       style={[
         styles.card,
         {
-          backgroundColor: isDarkMode ? '#2C2C2C' : COLORS.backgroundCard,
-          shadowColor: COLORS.shadow,
+          backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+          borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+          borderWidth: 1,
+          shadowColor: COLORS.primary,
           borderRadius: rd(16),
           padding: pd(16),
         },
@@ -68,11 +70,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    fontWeight: '600',
+    fontFamily: FONT_NAMES.bold,
     marginBottom: 2,
   },
   subtitle: {
     fontSize: 13,
+    fontFamily: FONT_NAMES.medium,
   },
   arrowContainer: {
     paddingLeft: 8,

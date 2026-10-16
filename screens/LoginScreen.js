@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import Button from '../components/Button';
 import { useResponsive } from '../utils/responsive';
 import { CameraView, useCameraPermissions } from 'expo-camera';
@@ -72,14 +72,13 @@ const LoginScreen = ({ navigation }) => {
       marginBottom: pd(20),
     },
     brand: {
-      fontWeight: '800',
+      fontFamily: FONT_NAMES.bold,
       letterSpacing: 0.5,
-      fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium',
     },
     sub: {
       marginTop: pd(6),
       letterSpacing: 2.5,
-      fontWeight: '600',
+      fontFamily: FONT_NAMES.semiBold,
     },
     authCard: {
       width: '100%',
@@ -91,11 +90,11 @@ const LoginScreen = ({ navigation }) => {
       shadowRadius: 20,
       elevation: 8,
       borderWidth: 1,
-      borderColor: 'rgba(201, 162, 93, 0.15)', // subtle gold border
+      borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.25)' : '#F0E6DF',
     },
     welcomeText: {
       fontSize: fs(24),
-      fontWeight: '700',
+      fontFamily: FONT_NAMES.bold,
       marginBottom: pd(6),
       textAlign: 'center',
     },
@@ -103,7 +102,7 @@ const LoginScreen = ({ navigation }) => {
       fontSize: fs(14),
       textAlign: 'center',
       marginBottom: pd(30),
-      fontWeight: '500',
+      fontFamily: FONT_NAMES.medium,
     },
     formSpace: {
       width: '100%',
@@ -111,7 +110,7 @@ const LoginScreen = ({ navigation }) => {
     inputContainer: {
     },
     label: {
-      fontWeight: '600',
+      fontFamily: FONT_NAMES.semiBold,
       marginBottom: pd(8),
       marginLeft: pd(4),
       opacity: 0.9,
@@ -122,7 +121,7 @@ const LoginScreen = ({ navigation }) => {
       paddingHorizontal: pd(16),
       fontSize: fs(16),
       borderWidth: 1.5,
-      fontWeight: '600',
+      fontFamily: FONT_NAMES.medium,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.05,
@@ -170,7 +169,7 @@ const LoginScreen = ({ navigation }) => {
       height: '100%',
       paddingHorizontal: pd(16),
       fontSize: fs(16),
-      fontWeight: '600',
+      fontFamily: FONT_NAMES.semiBold,
       letterSpacing: 1.5,
     },
     otpContainer: {
@@ -179,7 +178,7 @@ const LoginScreen = ({ navigation }) => {
     },
     otpInput: {
       textAlign: 'center',
-      fontWeight: '700',
+      fontFamily: FONT_NAMES.bold,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.05,
@@ -414,7 +413,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAwareScrollView
-      style={[styles.root, { backgroundColor: isDarkMode ? '#1A1A1A' : '#FAF6ED' }]}
+      style={[styles.root, { backgroundColor: isDarkMode ? '#121212' : '#F9F8F5' }]}
       contentContainerStyle={[styles.content, { minHeight: '100%' }]}
       enableOnAndroid={true}
       extraScrollHeight={Platform.OS === 'ios' ? 50 : 100}
@@ -423,17 +422,17 @@ const LoginScreen = ({ navigation }) => {
       scrollEnabled={!!activeInput}
     >
       {/* Decorative Background Elements */}
-      <View style={[styles.bgCircleTop, { backgroundColor: isDarkMode ? '#C9A25D20' : '#C9A25D30' }]} />
-      <View style={[styles.bgCircleBottom, { backgroundColor: isDarkMode ? '#8D6E6315' : '#E8D9C260' }]} />
+      <View style={[styles.bgCircleTop, { backgroundColor: isDarkMode ? 'rgba(169, 87, 63, 0.15)' : 'rgba(169, 87, 63, 0.12)' }]} />
+      <View style={[styles.bgCircleBottom, { backgroundColor: isDarkMode ? 'rgba(90, 42, 78, 0.15)' : 'rgba(90, 42, 78, 0.1)' }]} />
 
       <View style={{ width: '100%', alignItems: 'center', paddingVertical: pd(20) }}>
           <View style={styles.headerContainer}>
             {/* Brand Logo / Badge */}
             <View style={[styles.brandBadge, { backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF', borderRadius: rd(25), width: wp(22) > 88 ? 88 : wp(22), height: wp(22) > 88 ? 88 : wp(22) }]}>
-              <Image source={require('../assets/home.png')} style={{ width: fs(56), height: fs(56), borderRadius: rd(16), overflow: 'hidden' }} resizeMode="contain" />
+              <Image source={require('../assets/icon.png')} style={{ width: fs(56), height: fs(56), borderRadius: rd(16), overflow: 'hidden' }} resizeMode="contain" />
             </View>
 
-            <Text style={[styles.brand, { color: theme.text, fontSize: fs(34) }]}>Goldshopper</Text>
+            <Text style={[styles.brand, { color: theme.text, fontSize: fs(34) }]}>ZohriERP</Text>
             <Text style={[styles.sub, { color: theme.textSecondary, fontSize: fs(12) }]}>
               B2B WHOLESALE PORTAL
             </Text>
@@ -441,8 +440,8 @@ const LoginScreen = ({ navigation }) => {
 
           {/* Auth Card */}
           <View style={[styles.authCard, {
-            backgroundColor: isDarkMode ? '#242424' : '#FFFFFF',
-            shadowColor: isDarkMode ? '#000000' : '#C9A25D',
+            backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+            shadowColor: COLORS.primary,
             width: contentWidth, 
             borderRadius: rd(24),
             paddingVertical: pd(35),
@@ -517,11 +516,11 @@ const LoginScreen = ({ navigation }) => {
                       <View style={[
                         styles.phonePrefix,
                         {
-                          backgroundColor: isDarkMode ? '#3A3A3A' : '#F5F0E4',
+                          backgroundColor: isDarkMode ? '#27272A' : '#FAF0EB',
                           borderRightColor: activeInput === 'phone' ? COLORS.primary : theme.border,
                         }
                       ]}>
-                        <Text style={{ color: theme.text, fontWeight: '700', fontSize: fs(15) }}>+91</Text>
+                        <Text style={{ color: theme.text, fontFamily: FONT_NAMES.bold, fontSize: fs(15) }}>+91</Text>
                       </View>
                       <TextInput
                         ref={phoneInputRef}
@@ -626,7 +625,7 @@ const LoginScreen = ({ navigation }) => {
         </View>
 
         <Text style={[styles.footer, { color: theme.textSecondary, fontSize: fs(12), paddingBottom: pd(24), paddingTop: pd(24) }]}>
-          © 2026 Goldshopper B2B Portal. All rights reserved.
+          © 2026 ZohriERP B2B Portal. All rights reserved.
         </Text>
 
       {/* Scanner Modal */}

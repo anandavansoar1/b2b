@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert ,Pl
 import { useTheme } from '../theme/ThemeContext';
 import { useResponsive } from '../utils/responsive';
 import Header from '../components/Header';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 
 const SettingsScreen = ({ navigation }) => {
@@ -72,10 +72,10 @@ const SettingsScreen = ({ navigation }) => {
 
   const SettingGroup = ({ children }) => (
     <View style={[styles.settingGroup, { 
-      backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF',
+      backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
       borderRadius: rd(16), 
       overflow: 'hidden',
-      borderColor: isDarkMode ? '#3A3A3A' : '#E5E7EB',
+      borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
       borderWidth: 1,
       marginBottom: pd(24)
     }]}>
@@ -85,7 +85,7 @@ const SettingsScreen = ({ navigation }) => {
           <>
             {child}
             {index !== React.Children.count(children) - 1 && (
-              <View style={[styles.divider, { backgroundColor: isDarkMode ? '#3A3A3A' : '#E5E7EB' }]} />
+              <View style={[styles.divider, { backgroundColor: isDarkMode ? '#27272A' : '#F0E6DF' }]} />
             )}
           </>
         );
@@ -106,18 +106,20 @@ const SettingsScreen = ({ navigation }) => {
           
           {/* User Profile Summary */}
           <View style={[styles.profileCard, { 
-            backgroundColor: isDarkMode ? '#2C2C2C' : COLORS.primary, 
+            backgroundColor: isDarkMode ? '#1E1E1E' : COLORS.primary, 
+            borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : 'transparent',
+            borderWidth: isDarkMode ? 1 : 0,
             borderRadius: rd(20),
             padding: pd(20),
             marginBottom: pd(24)
           }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={[styles.avatarBox, { backgroundColor: isDarkMode ? '#3A3A3A' : '#FFFFFF33', borderRadius: rd(25) }]}>
+              <View style={[styles.avatarBox, { backgroundColor: isDarkMode ? '#27272A' : '#FFFFFF33', borderRadius: rd(25) }]}>
                 <Ionicons name="person" size={fs(26)} color="#FFFFFF" />
               </View>
               <View style={{ marginLeft: pd(16) }}>
-                <Text style={{ fontSize: fs(18), fontWeight: '700', color: '#FFFFFF' }}>John Doe</Text>
-                <Text style={{ fontSize: fs(13), color: isDarkMode ? '#AAAAAA' : '#E0E7FF', marginTop: pd(4) }}>+91 98765 43210</Text>
+                <Text style={{ fontSize: fs(18), fontFamily: FONT_NAMES.bold, color: '#FFFFFF' }}>John Doe</Text>
+                <Text style={{ fontSize: fs(13), fontFamily: FONT_NAMES.medium, color: isDarkMode ? '#A09088' : '#FAF0EB', marginTop: pd(4) }}>+91 98765 43210</Text>
               </View>
             </View>
           </View>
@@ -174,7 +176,7 @@ const SettingsScreen = ({ navigation }) => {
           </SettingGroup>
 
           <Text style={[styles.versionText, { color: theme.textSecondary, fontSize: fs(12) }]}>
-            Goldshopper B2B v1.0.0
+            ZohriERP B2B v1.0.0
           </Text>
 
         </View>
@@ -187,14 +189,14 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   scrollContent: { paddingBottom: 100 },
   sectionTitle: {
-    fontWeight: '700',
+    fontFamily: FONT_NAMES.bold,
     marginBottom: 8,
     marginLeft: 12,
   },
   profileCard: {
-    shadowColor: '#000',
+    shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 10,
     elevation: 4,
   },
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   settingGroup: {
-    shadowColor: '#000',
+    shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
     shadowRadius: 5,
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
     marginRight: 14,
   },
   settingLabel: {
-    fontWeight: '500',
+    fontFamily: FONT_NAMES.medium,
   },
   divider: {
     height: 1,
@@ -236,6 +238,7 @@ const styles = StyleSheet.create({
   },
   versionText: {
     textAlign: 'center',
+    fontFamily: FONT_NAMES.medium,
     marginTop: 10,
     marginBottom: 20,
   },

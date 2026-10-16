@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 
 const Button = ({
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   text: {
-    fontWeight: '700',
+    fontFamily: FONT_NAMES.bold,
     letterSpacing: 0.4,
   },
 });

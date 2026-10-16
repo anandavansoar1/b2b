@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 
 const CartButton = () => {
@@ -57,9 +57,9 @@ const CartButton = () => {
             alignItems: 'center',
             paddingHorizontal: pd(4),
             borderWidth: 1.5,
-            borderColor: isDarkMode ? '#1E1E1E' : COLORS.backgroundLight,
+            borderColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
           }}>
-            <Text style={{ color: '#fff', fontSize: fs(10), fontWeight: 'bold' }}>
+            <Text style={{ color: '#fff', fontSize: fs(10), fontFamily: FONT_NAMES.bold }}>
               {totalQuantity > 99 ? '99+' : totalQuantity}
             </Text>
           </View>

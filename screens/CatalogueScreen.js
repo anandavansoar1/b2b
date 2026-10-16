@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 import Header from '../components/Header';
 import CartButton from '../components/CartButton';
@@ -108,7 +108,9 @@ const CatalogueScreen = ({ navigation }) => {
         style={[
           styles.productCard,
           {
-            backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF',
+            backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+            borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+            borderWidth: 1,
             borderRadius: rd(20),
             marginLeft: index % 2 === 0 ? 0 : pd(10),
           },
@@ -119,7 +121,7 @@ const CatalogueScreen = ({ navigation }) => {
           style={[
             styles.productImage,
             {
-              backgroundColor: isDarkMode ? '#3A3A3A' : '#F8F4EA',
+              backgroundColor: isDarkMode ? '#27272A' : '#FAF0EB',
               borderRadius: rd(14),
               overflow: 'hidden',
             },
@@ -220,7 +222,7 @@ const CatalogueScreen = ({ navigation }) => {
               activeOpacity={0.8}
               onPress={() => dispatch(addToCart(item))}
             >
-              <Text style={{ color: '#fff', fontSize: fs(12), fontWeight: '700' }}>
+              <Text style={{ color: '#fff', fontSize: fs(12), fontFamily: FONT_NAMES.bold }}>
                 {item.inStock ? '+ Add to Order' : 'Unavailable'}
               </Text>
             </TouchableOpacity>
@@ -235,7 +237,7 @@ const CatalogueScreen = ({ navigation }) => {
     <View style={[styles.root, { backgroundColor: theme.background }]}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={isDarkMode ? '#1E1E1E' : COLORS.backgroundLight}
+        backgroundColor={isDarkMode ? '#1E1E1E' : '#FFFFFF'}
       />
 
       <Header
@@ -257,10 +259,10 @@ const CatalogueScreen = ({ navigation }) => {
             style={[
               styles.searchBar,
               {
-                backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF',
+                backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
                 borderRadius: rd(16),
-                borderColor: activeInput === 'search' ? COLORS.primary : 'transparent',
-                borderWidth: activeInput === 'search' ? 1.5 : 1,
+                borderColor: activeInput === 'search' ? COLORS.primary : isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+                borderWidth: 1,
                 marginTop: pd(18),
                 marginBottom: pd(6),
                 height: pd(50),
@@ -272,7 +274,7 @@ const CatalogueScreen = ({ navigation }) => {
               🔍
             </Text>
             <TextInput
-              style={[styles.searchInput, { color: theme.text, fontSize: fs(14) }]}
+              style={[styles.searchInput, { color: theme.text, fontSize: fs(14), fontFamily: FONT_NAMES.medium }]}
               placeholder="Search product or SKU..."
               placeholderTextColor={COLORS.textMuted}
               value={searchText}
@@ -304,8 +306,10 @@ const CatalogueScreen = ({ navigation }) => {
                       selectedCategory === cat.id
                         ? COLORS.primary
                         : isDarkMode
-                        ? '#2C2C2C'
+                        ? '#1E1E1E'
                         : '#FFFFFF',
+                    borderColor: selectedCategory === cat.id ? COLORS.primary : isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+                    borderWidth: 1,
                     borderRadius: rd(22),
                     paddingHorizontal: pd(16),
                     height: pd(38),
@@ -317,7 +321,7 @@ const CatalogueScreen = ({ navigation }) => {
                   style={{
                     color: selectedCategory === cat.id ? '#FFF' : theme.text,
                     fontSize: fs(13),
-                    fontWeight: selectedCategory === cat.id ? '700' : '500',
+                    fontFamily: selectedCategory === cat.id ? FONT_NAMES.bold : FONT_NAMES.medium,
                   }}
                 >
                   {cat.label}
@@ -456,7 +460,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   productName: {
-    fontWeight: '700',
+    fontFamily: FONT_NAMES.bold,
     lineHeight: 18,
   },
   productMeta: {
@@ -466,17 +470,17 @@ const styles = StyleSheet.create({
   },
   purity: {
     backgroundColor: COLORS.primaryLight,
-    color: COLORS.primaryDark,
+    color: COLORS.primary,
     paddingHorizontal: 8,
     paddingVertical: 3,
-    fontWeight: '700',
+    fontFamily: FONT_NAMES.bold,
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: 4,
   },
-  price: { fontWeight: '800' },
+  price: { fontFamily: FONT_NAMES.bold },
   addBtn: {
     justifyContent: 'center',
     alignItems: 'center',

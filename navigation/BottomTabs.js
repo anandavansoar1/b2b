@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 import { Platform } from 'react-native';
 
@@ -43,10 +43,10 @@ const BottomTabs = () => {
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
-          backgroundColor: isDarkMode ? '#1A1A1A' : '#FFFFFF',
+          backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
           borderTopWidth: 0,
           elevation: 20,
-          shadowColor: '#000',
+          shadowColor: COLORS.primary,
           shadowOffset: { width: 0, height: -4 },
           shadowOpacity: 0.1,
           shadowRadius: 12,
@@ -62,7 +62,7 @@ const BottomTabs = () => {
         },
         tabBarLabelStyle: {
           fontSize: fs(11),
-          fontWeight: '700',
+          fontFamily: FONT_NAMES.bold,
           marginTop: pd(4),
         },
       })}

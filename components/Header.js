@@ -8,7 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -28,18 +28,20 @@ const Header = ({
       style={[
         styles.container,
         { 
-          backgroundColor: isDarkMode ? '#1E1E1E' : COLORS.backgroundLight,
+          backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
           paddingHorizontal: pd(20),
           paddingTop: Platform.OS === 'android' ? pd(48) : pd(56),
           paddingBottom: pd(16),
           borderBottomRightRadius: rd(24),
           borderBottomLeftRadius: rd(24),
+          borderBottomWidth: 1,
+          borderBottomColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
         },
       ]}
     >
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={isDarkMode ? '#1E1E1E' : COLORS.backgroundLight}
+        backgroundColor={isDarkMode ? '#1E1E1E' : '#FFFFFF'}
       />
 
       <View style={styles.leftContainer}>
@@ -109,11 +111,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
     letterSpacing: 0.3,
   },
   subtitle: {
-    fontWeight: '500',
+    fontFamily: FONT_NAMES.medium,
   },
   rightSide: {
     justifyContent: 'center',

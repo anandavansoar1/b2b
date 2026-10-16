@@ -1,33 +1,40 @@
 {
   "expo": {
-    "name": "GoldShopper B2B",
-    "slug": "b2b",
+    "name": "ZohriERP B2B",
+    "slug": "zohrierp-b2b",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./b2b_zoomed.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./b2b_zoomed.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#F5F0E4"
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#A9573F"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.goldshopper.b2b",
+      "bundleIdentifier": "com.zohrierp.b2b",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.goldshopper.b2b"
+      "package": "com.zohrierp.b2b",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#A9573F"
+      }
     },
     "web": {
-      "favicon": "./b2b_zoomed.png"
+      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
         "projectId": "dac0f710-2c28-4b99-a602-3105ea76c359"
       }
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

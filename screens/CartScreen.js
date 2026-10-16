@@ -12,7 +12,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart, removeFromCart, clearCart } from '../redux/slices/cartSlice';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 import Header from '../components/Header';
 import { Ionicons } from '@expo/vector-icons';
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemName: {
-    fontWeight: '700',
+    fontFamily: FONT_NAMES.bold,
     flex: 1,
     marginRight: 8,
   },
@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
   },
   itemSku: {
     marginTop: 2,
+    fontFamily: FONT_NAMES.regular,
   },
   itemFooter: {
     flexDirection: 'row',
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   itemPrice: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
   },
   quantityControl: {
     flexDirection: 'row',
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   },
   qtyText: {
     textAlign: 'center',
-    fontWeight: '600',
+    fontFamily: FONT_NAMES.bold,
   },
   emptyStateContainer: {
     flex: 1,
@@ -241,14 +242,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyTitle: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
   },
   emptySubtitle: {
     textAlign: 'center',
+    fontFamily: FONT_NAMES.medium,
     lineHeight: 22,
   },
   startShoppingBtn: {
-    shadowColor: '#CDA836',
+    shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

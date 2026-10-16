@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 import Header from '../components/Header';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,7 +18,7 @@ const UnderConstructionScreen = ({ navigation }) => {
         onBackPress={() => navigation.goBack()}
       />
       <View style={styles.container}>
-        <View style={[styles.iconContainer, { backgroundColor: isDarkMode ? '#2C2C2C' : '#F8F4EA' }]}>
+        <View style={[styles.iconContainer, { backgroundColor: isDarkMode ? '#1E1E1E' : '#FAF0EB' }]}>
           <Ionicons name="construct-outline" size={fs(60)} color={COLORS.primary} />
         </View>
         <Text style={[styles.title, { color: theme.text, fontSize: fs(24) }]}>
@@ -59,11 +59,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   title: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
     marginBottom: 12,
   },
   subtitle: {
     textAlign: 'center',
+    fontFamily: FONT_NAMES.medium,
     lineHeight: 22,
     marginBottom: 40,
   },
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: '#FFF',
-    fontWeight: '700',
+    fontFamily: FONT_NAMES.bold,
   },
 });
 

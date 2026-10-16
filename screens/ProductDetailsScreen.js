@@ -12,7 +12,7 @@ import {
   FlatList
 } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 import Header from '../components/Header';
 import CartButton from '../components/CartButton';
@@ -56,7 +56,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   }).current;
 
   const renderImage = ({ item }) => (
-    <View style={[styles.imageWrapper, { width, height: hp(45), backgroundColor: isDarkMode ? '#212121' : '#F8F4EA' }]}>
+    <View style={[styles.imageWrapper, { width, height: hp(45), backgroundColor: isDarkMode ? '#1E1E1E' : '#FAF0EB' }]}>
       {item ? (
         <Image
           source={item}
@@ -313,17 +313,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   productName: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
   },
   price: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
   },
   divider: {
     height: 1,
     width: '100%',
   },
   sectionTitle: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
     letterSpacing: 0.5,
   },
   specItem: {

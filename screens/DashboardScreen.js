@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { useResponsive } from '../utils/responsive';
 import Header from '../components/Header';
 import Card from '../components/Card';
@@ -40,7 +40,7 @@ const DashboardScreen = ({ navigation }) => {
   return (
     <View style={[styles.root, { backgroundColor: theme.background }]}>
       <Header
-        title="Goldshopper B2B"
+        title="ZohriERP B2B"
         subtitle="Welcome back 👋"
         subtitleTop={true}
         showBack={false}
@@ -52,7 +52,9 @@ const DashboardScreen = ({ navigation }) => {
               width: pd(44), 
               height: pd(44), 
               borderRadius: rd(14),
-              backgroundColor: isDarkMode ? '#3A3A3A' : '#FFFFFF',
+              backgroundColor: isDarkMode ? '#27272A' : '#FFFFFF',
+              borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+              borderWidth: 1,
             }]}
           >
             <Ionicons name={isDarkMode ? 'sunny' : 'moon'} size={fs(22)} color={COLORS.primary} />
@@ -100,11 +102,18 @@ const DashboardScreen = ({ navigation }) => {
           <View style={[styles.sectionHeader, { marginTop: pd(10) }]}>
             <Text style={[styles.sectionTitle, { color: theme.text, fontSize: fs(18), marginHorizontal: 0 }]}>Recent Activity</Text>
             <TouchableOpacity activeOpacity={0.7}>
-              <Text style={{ color: COLORS.primary, fontWeight: '800', fontSize: fs(13) }}>View All</Text>
+              <Text style={{ color: COLORS.primary, fontFamily: FONT_NAMES.bold, fontSize: fs(13) }}>View All</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={[styles.activityContainer, { backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF', borderRadius: rd(24), padding: pd(4), marginTop: pd(4) }]}>
+          <View style={[styles.activityContainer, { 
+            backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF', 
+            borderRadius: rd(24), 
+            padding: pd(4), 
+            marginTop: pd(4),
+            borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+            borderWidth: 1,
+          }]}>
             {recentActivity.map((activity, index) => (
               <View 
                 key={activity.id} 
@@ -114,19 +123,19 @@ const DashboardScreen = ({ navigation }) => {
                     paddingVertical: pd(16), 
                     paddingHorizontal: pd(20), 
                     borderBottomWidth: index === recentActivity.length - 1 ? 0 : 1, 
-                    borderBottomColor: isDarkMode ? '#3A3A3A' : '#F1F1F1' 
+                    borderBottomColor: isDarkMode ? '#27272A' : '#F0E6DF' 
                   }
                 ]}
               >
-                <View style={[styles.activityIcon, { backgroundColor: `${activity.color}12`, borderRadius: rd(14), width: pd(46), height: pd(46) }]}>
+                <View style={[styles.activityIcon, { backgroundColor: `${activity.color}15`, borderRadius: rd(14), width: pd(46), height: pd(46) }]}>
                   <Ionicons name={activity.icon} size={fs(24)} color={activity.color} />
                 </View>
                 <View style={{ flex: 1, marginLeft: pd(16) }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text style={{ color: theme.text, fontSize: fs(15), fontWeight: '700' }}>{activity.title}</Text>
-                    <Text style={{ color: theme.textSecondary, fontSize: fs(11), fontWeight: '600' }}>{activity.time}</Text>
+                    <Text style={{ color: theme.text, fontSize: fs(15), fontFamily: FONT_NAMES.bold }}>{activity.title}</Text>
+                    <Text style={{ color: theme.textSecondary, fontSize: fs(11), fontFamily: FONT_NAMES.medium }}>{activity.time}</Text>
                   </View>
-                  <Text style={{ color: theme.textSecondary, fontSize: fs(13), marginTop: pd(2) }} numberOfLines={1}>
+                  <Text style={{ color: theme.textSecondary, fontSize: fs(13), fontFamily: FONT_NAMES.regular, marginTop: pd(2) }} numberOfLines={1}>
                     {activity.desc}
                   </Text>
                 </View>
@@ -137,8 +146,8 @@ const DashboardScreen = ({ navigation }) => {
         </View>
 
         <View style={[styles.footer, { marginTop: 'auto', paddingBottom: pd(110), width: '100%' }]}>
-          <Text style={{ color: theme.textSecondary, fontSize: fs(12), textAlign: 'center', opacity: 0.7 }}>
-            Goldshopper B2B Portal v1.0.0
+          <Text style={{ color: theme.textSecondary, fontSize: fs(12), fontFamily: FONT_NAMES.medium, textAlign: 'center', opacity: 0.7 }}>
+            ZohriERP B2B Portal v1.0.0
           </Text>
         </View>
       </ScrollView>
@@ -171,7 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   sectionTitle: {
-    fontWeight: '800',
+    fontFamily: FONT_NAMES.bold,
     marginBottom: 12,
     letterSpacing: 0.2,
   },

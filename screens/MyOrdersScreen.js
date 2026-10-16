@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { useTheme } from '../theme/ThemeContext';
 import { useResponsive } from '../utils/responsive';
 import Header from '../components/Header';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 
 const MyOrdersScreen = ({ navigation }) => {
@@ -51,9 +51,9 @@ const MyOrdersScreen = ({ navigation }) => {
               style={[
                 styles.tabBtn,
                 {
-                  backgroundColor: activeTab === tab ? COLORS.primary : (isDarkMode ? '#2C2C2C' : '#FFFFFF'),
-                  borderColor: isDarkMode ? '#3A3A3A' : '#E5E7EB',
-                  borderWidth: activeTab === tab ? 0 : 1,
+                  backgroundColor: activeTab === tab ? COLORS.primary : (isDarkMode ? '#1E1E1E' : '#FFFFFF'),
+                  borderColor: activeTab === tab ? COLORS.primary : (isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF'),
+                  borderWidth: 1,
                   paddingHorizontal: pd(20),
                   paddingVertical: pd(8),
                   borderRadius: rd(20),
@@ -63,7 +63,7 @@ const MyOrdersScreen = ({ navigation }) => {
               <Text 
                 style={{ 
                   color: activeTab === tab ? '#FFFFFF' : theme.textSecondary,
-                  fontWeight: activeTab === tab ? '700' : '500',
+                  fontFamily: activeTab === tab ? FONT_NAMES.bold : FONT_NAMES.medium,
                   fontSize: fs(13)
                 }}
               >
@@ -84,7 +84,9 @@ const MyOrdersScreen = ({ navigation }) => {
                 style={[
                   styles.orderCard,
                   {
-                    backgroundColor: isDarkMode ? '#2C2C2C' : COLORS.backgroundCard,
+                    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+                    borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+                    borderWidth: 1,
                     borderRadius: rd(20),
                     padding: pd(18),
                     marginBottom: pd(16),
@@ -93,46 +95,46 @@ const MyOrdersScreen = ({ navigation }) => {
               >
                 <View style={styles.headerRow}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={[styles.iconBox, { backgroundColor: isDarkMode ? '#3A3A3A' : '#F5F0E4', borderRadius: rd(12), width: pd(40), height: pd(40) }]}>
+                    <View style={[styles.iconBox, { backgroundColor: isDarkMode ? '#27272A' : '#FAF0EB', borderRadius: rd(12), width: pd(40), height: pd(40) }]}>
                       <Ionicons name="cube-outline" size={fs(20)} color={COLORS.primary} />
                     </View>
                     <View style={{ marginLeft: pd(12) }}>
-                      <Text style={{ fontSize: fs(15), fontWeight: '700', color: theme.text }}>
+                      <Text style={{ fontSize: fs(15), fontFamily: FONT_NAMES.bold, color: theme.text }}>
                         {order.id}
                       </Text>
-                      <Text style={{ fontSize: fs(12), color: theme.textSecondary, marginTop: pd(2) }}>
+                      <Text style={{ fontSize: fs(12), fontFamily: FONT_NAMES.medium, color: theme.textSecondary, marginTop: pd(2) }}>
                         {order.date}
                       </Text>
                     </View>
                   </View>
                   
-                  <View style={[styles.statusBadge, { backgroundColor: isDarkMode ? '#1E1E1E' : statusConfig.bg, borderRadius: rd(8), paddingHorizontal: pd(10), paddingVertical: pd(4) }]}>
-                    <Text style={{ fontSize: fs(11), fontWeight: '700', color: isDarkMode ? statusConfig.text : statusConfig.text }}>
+                  <View style={[styles.statusBadge, { backgroundColor: isDarkMode ? '#121212' : statusConfig.bg, borderRadius: rd(8), paddingHorizontal: pd(10), paddingVertical: pd(4) }]}>
+                    <Text style={{ fontSize: fs(11), fontFamily: FONT_NAMES.bold, color: statusConfig.text }}>
                       {order.status}
                     </Text>
                   </View>
                 </View>
 
-                <View style={[styles.divider, { backgroundColor: isDarkMode ? '#3A3A3A' : '#F3F4F6', marginVertical: pd(14) }]} />
+                <View style={[styles.divider, { backgroundColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF', marginVertical: pd(14) }]} />
 
                 <View style={styles.detailsRow}>
                   <View>
-                    <Text style={{ fontSize: fs(12), color: theme.textSecondary }}>Items</Text>
-                    <Text style={{ fontSize: fs(14), fontWeight: '600', color: theme.text, marginTop: pd(2) }}>{order.items} Products</Text>
+                    <Text style={{ fontSize: fs(12), fontFamily: FONT_NAMES.medium, color: theme.textSecondary }}>Items</Text>
+                    <Text style={{ fontSize: fs(14), fontFamily: FONT_NAMES.semiBold, color: theme.text, marginTop: pd(2) }}>{order.items} Products</Text>
                   </View>
                   <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={{ fontSize: fs(12), color: theme.textSecondary }}>Total Amount</Text>
-                    <Text style={{ fontSize: fs(16), fontWeight: '800', color: COLORS.primary, marginTop: pd(2) }}>{order.total}</Text>
+                    <Text style={{ fontSize: fs(12), fontFamily: FONT_NAMES.medium, color: theme.textSecondary }}>Total Amount</Text>
+                    <Text style={{ fontSize: fs(16), fontFamily: FONT_NAMES.bold, color: COLORS.primary, marginTop: pd(2) }}>{order.total}</Text>
                   </View>
                 </View>
 
                 <View style={{ flexDirection: 'row', marginTop: pd(16), gap: pd(10) }}>
-                  <TouchableOpacity onPress={() => navigation.navigate('UnderConstruction')} style={[styles.actionBtn, { flex: 1, backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF', borderColor: isDarkMode ? '#3A3A3A' : '#E5E7EB', borderWidth: 1, borderRadius: rd(10), paddingVertical: pd(10) }]}>
-                    <Text style={{ textAlign: 'center', fontSize: fs(13), fontWeight: '600', color: theme.text }}>View Details</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate('UnderConstruction')} style={[styles.actionBtn, { flex: 1, backgroundColor: isDarkMode ? '#27272A' : '#FFFFFF', borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF', borderWidth: 1, borderRadius: rd(10), paddingVertical: pd(10) }]}>
+                    <Text style={{ textAlign: 'center', fontSize: fs(13), fontFamily: FONT_NAMES.semiBold, color: theme.text }}>View Details</Text>
                   </TouchableOpacity>
                   {order.status === 'Delivered' && (
                     <TouchableOpacity onPress={() => navigation.navigate('UnderConstruction')} style={[styles.actionBtn, { flex: 1, backgroundColor: COLORS.primary, borderRadius: rd(10), paddingVertical: pd(10) }]}>
-                      <Text style={{ textAlign: 'center', fontSize: fs(13), fontWeight: '600', color: '#FFFFFF' }}>Reorder</Text>
+                      <Text style={{ textAlign: 'center', fontSize: fs(13), fontFamily: FONT_NAMES.semiBold, color: '#FFFFFF' }}>Reorder</Text>
                     </TouchableOpacity>
                   )}
                 </View>

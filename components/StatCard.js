@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeContext';
 import { useResponsive } from '../utils/responsive';
-import { COLORS } from '../theme/colors';
+import { COLORS, FONT_NAMES } from '../theme/colors';
 
 const StatCard = ({ label, value, color, icon }) => {
   const { isDarkMode } = useTheme();
@@ -14,7 +14,10 @@ const StatCard = ({ label, value, color, icon }) => {
       style={[
         styles.statCard,
         {
-          backgroundColor: isDarkMode ? '#2C2C2C' : COLORS.backgroundCard,
+          backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+          borderColor: isDarkMode ? 'rgba(169, 87, 63, 0.2)' : '#F0E6DF',
+          borderWidth: 1,
+          borderTopWidth: 4,
           borderTopColor: color,
           borderRadius: rd(20),
           padding: pd(16),
@@ -34,8 +37,7 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     alignItems: 'center',
-    borderTopWidth: 4,
-    shadowColor: '#000',
+    shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
@@ -46,13 +48,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statValue: {
-    fontWeight: '900',
+    fontFamily: FONT_NAMES.bold,
     letterSpacing: -0.5,
   },
   statLabel: {
     marginTop: 2,
     textAlign: 'center',
-    fontWeight: '700',
+    fontFamily: FONT_NAMES.medium,
   },
 });
 
