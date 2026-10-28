@@ -429,7 +429,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.headerContainer}>
             {/* Brand Logo / Badge */}
             <View style={[styles.brandBadge, { backgroundColor: isDarkMode ? '#2C2C2C' : '#FFFFFF', borderRadius: rd(25), width: wp(22) > 88 ? 88 : wp(22), height: wp(22) > 88 ? 88 : wp(22) }]}>
-              <Image source={require('../assets/icon.png')} style={{ width: fs(56), height: fs(56), borderRadius: rd(16), overflow: 'hidden' }} resizeMode="contain" />
+              <Image source={require('../assets/appicon.png')} style={{ width: fs(64), height: fs(64) }} resizeMode="contain" />
             </View>
 
             <Text style={[styles.brand, { color: theme.text, fontSize: fs(34) }]}>ZohriERP</Text>

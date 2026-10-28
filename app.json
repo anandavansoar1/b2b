@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#A9573F"
+      "backgroundColor": "#A14B34"
     },
     "ios": {
       "supportsTablet": true,
@@ -22,19 +22,30 @@
       "package": "com.zohrierp.b2b",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#A9573F"
+        "backgroundColor": "#A14B34"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      "expo-font",
+      "expo-updates"
+    ],
     "extra": {
       "eas": {
-        "projectId": "dac0f710-2c28-4b99-a602-3105ea76c359"
+        "projectId": "51d39abf-30e3-41c2-ba80-d09e5ec25f17"
       }
     },
-    "plugins": [
-      "expo-font"
-    ]
+    "owner": "avansoar1",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/51d39abf-30e3-41c2-ba80-d09e5ec25f17"
+    }
   }
 }
